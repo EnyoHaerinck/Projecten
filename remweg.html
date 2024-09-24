@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Remweg Calculator</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Bereken de Remweg</h1>
+    
+    <label for="speed">Snelheid (km/h):</label>
+    <input type="number" id="speed" placeholder="Snelheid"><br>
+
+    <label for="deceleration">Vertraging (m/s²):</label>
+    <input type="number" id="deceleration" placeholder="Vertraging"><br>
+
+    <button onclick="calculateBrakingDistance()">Bereken Remweg</button>
+
+    <h2 id="result"></h2>
+
+    <!-- Terug naar home knop -->
+    <button onclick="window.location.href='index.html'">Terug naar Home</button>
+
+    <script>
+        function calculateBrakingDistance() {
+            const speed = document.getElementById('speed').value;
+            const deceleration = document.getElementById('deceleration').value;
+
+            if (speed && deceleration && deceleration > 0) {
+                const speedInMetersPerSecond = (speed * 1000) / 3600;
+                const brakingDistance = (speedInMetersPerSecond ** 2) / (2 * deceleration);
+                document.getElementById('result').textContent = `De remweg is ${brakingDistance.toFixed(2)} meter.`;
+            } else {
+                document.getElementById('result').textContent = 'Vul geldige waarden in.';
+            }
+        }
+    </script>
+</body>
+</html>
