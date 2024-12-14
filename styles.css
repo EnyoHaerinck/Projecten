@@ -1,55 +1,109 @@
 /* Algemene stijlen voor beide pagina's */
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     text-align: center;
-    background-color: #f0f0f0;
+    background-color: #f4f4f4;
     margin: 0;
     padding: 20px;
+    color: #333;
+}
+
+.container {
+    border: 2px solid #bae6fd80; /* Border around the container */
+    border-radius: 10px; /* Rounded corners */
+    padding: 20px; /* Padding inside the container */
+    background-color: white; /* Background color for the container */
+    max-width: 400px; /* Maximum width for the container */
+    margin: auto; /* Center the container */
+    padding: 50px;
+    --tw-shadow: 0 25px 50px -12px rgb(0 0 0 / .25);
+    --tw-shadow-colored: 0 25px 50px -12px var(--tw-shadow-color);
+    box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 }
 
 h1 {
-    color: #333;
+    color: #2c3e50;
+    font-weight: 1000;
+    margin-bottom: 20px;
+    font-size: 3rem;
+    line-height: 1;
 }
 
 nav {
     margin-top: 20px;
+    display: flex;
+    flex-direction: column; /* Stack buttons vertically */
+    align-items: center; /* Center align buttons */
 }
 
 a {
-    display: inline-block;
-    padding: 10px 20px;
-    margin: 10px;
+    padding: 15px 30px;
+    margin: 10px 0; /* Vertical margin for spacing */
     text-decoration: none;
-    background-color: #007bff;
-    color: white;
-    border-radius: 25px;
-    transition: background-color 0.3s ease;
+    background-color: rgb(240 249 255 / var(--tw-bg-opacity, 1));
+    color: rgb(2 132 199 / var(--tw-text-opacity, 1)); 
+    border-radius: 30px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    width: 100%; /* Make buttons full width */
+    max-width: 300px; /* Optional: limit the width of buttons */
 }
 
 a:hover {
-    background-color: #0056b3;
+    background-color: rgb(220 229 251 / var(--tw-text-opacity, 1)); ;
+    transform: translateY(-2px);
 }
 
 input, button {
-    padding: 10px;
+    padding: 12px;
     margin: 10px;
     font-size: 16px;
     border-radius: 20px;
+    border: 1px solid #ccc;
+    transition: border-color 0.3s ease;
+}
+
+input:focus, button:focus {
+    border-color: #3498db;
+    outline: none;
 }
 
 button {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+    padding: 15px 30px;
+    margin: 10px 0; /* Vertical margin for spacing */
+    text-decoration: none;
+    background-color: rgb(240 249 255 / var(--tw-bg-opacity, 1));
+    color: rgb(2 132 199 / var(--tw-text-opacity, 1)); 
+    border-radius: 30px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    width: 100%; /* Make buttons full width */
+    max-width: 300px; /* Optional: limit the width of buttons */
 }
 
 button:hover {
-    background-color: #0056b3;
+    background-color: rgb(220 229 251 / var(--tw-text-opacity, 1)); ;
+    transform: translateY(-2px);
 }
 
 #result {
     margin-top: 20px;
     font-size: 1.2em;
+}
+
+/* Responsieve stijlen */
+@media (max-width: 600px) {
+    h1 {
+        font-size: 2em;
+    }
+
+    a {
+        padding: 10px 20px;
+        font-size: 0.9em;
+    }
+
+    input, button {
+        width: 90%;
+        font-size: 14px;
+    }
 }
