@@ -7,11 +7,34 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>Projecten</h1>
-    <nav>
-        <a href="remweg.html">Remweg Calculator</a>
-        <a href="rapport.html">Rapport Calculator</a>
-        <!-- Later kun je hier andere projecten toevoegen -->
-    </nav>
+    <div class="container">
+        <h1>Projecten</h1>
+        <nav>
+            <a href="#" onclick="checkRemwegCode()">Remweg Calculator</a>
+            <a href="#" onclick="checkRapportCode()">Rapport Calculator</a>
+        </nav>
+    </div>
+
+    <script>
+        function checkRemwegCode() {
+            const userCode = prompt("Voer de toegangscode in voor de Remweg Calculator:");
+            const correctCode = "5TWE";
+            if (userCode === correctCode) {
+                window.location.href = "remweg.html";
+            } else {
+                alert("Onjuiste code. Toegang geweigerd.");
+            }
+        }
+
+        function checkRapportCode() {
+            const userCode = prompt("Voer de toegangscode in voor de Rapport Calculator:");
+            const correctCode = "5TWE";
+            if (userCode === correctCode) {
+                window.location.href = "rapport.html";
+            } else {
+                alert("Onjuiste code. Toegang geweigerd.");
+            }
+        }
+    </script>
 </body>
 </html>
