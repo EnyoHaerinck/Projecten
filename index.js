@@ -1,3 +1,4 @@
+// rapport
 const vakken = [
   { naam: "Aardrijkskunde", maxPunten: 10 },
   { naam: "Biologie", maxPunten: 10 },
