@@ -5,51 +5,76 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Rapport Berekening</title>
   <style>
-    body {
+
+  body {
   font-family: Arial, sans-serif;
   margin: 0;
-  padding: 0;
+  padding: 20;
   background-color: #f4f4f9;
 }
 
 .container {
-  max-width: 800px;
-  margin: 50px auto;
-  padding: 20px;
-  background: white;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border: 2px solid #bae6fd80; /* Border around the container */
+  border-radius: 10px; /* Rounded corners */
+  padding: 20px; /* Padding inside the container */
+  background-color: white; /* Background color for the container */
+  max-width: 800px; /* Maximum width for the container */
+  margin: auto;
+  padding: 50px;
+  --tw-shadow: 0 25px 50px -12px rgb(0 0 0 / .25);
+  --tw-shadow-colored: 0 25px 50px -12px var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+  margin-bottom: 30px;
 }
 
 h1 {
   text-align: center;
-  color: #333;
+  color: #2c3e50;
+  font-weight: 1000;
+  margin-bottom: 30px;
+  font-size: 3rem;
+  line-height: 1;
 }
 
 table {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate; /* Change to 'separate' for border-radius to work */
+  border-spacing: 0; /* Optional: Removes spacing between cells */
   margin-top: 20px;
+  border: 5px solid #bae5fd; /* Remove table border if needed */
+  border-radius: 6px; /* Add border-radius */
+  overflow: hidden; /* Ensures rounded corners are visible */
+  background-color: #fff; /* Optional: Matches container background */
 }
 
 th, td {
-  border: 1px solid #ddd;
+  border: 2px solid #bae6fd80; /* Border around the container */
   padding: 8px;
   text-align: center;
+  color:  #2c3e50;
 }
 
 th {
-  background-color: #007bff;
-  color: white;
+  background-color: #dff6ffba;
+  color: #2c3e50;
 }
 
 input {
   width: 90%;
   padding: 5px;
   box-sizing: border-box;
+  border: 2px solid #b7d1f9;
+  border-radius: 10px;
+  color:  #2c3e50;
+}
+
+input:focus {
+  border-radius: 10px;
+  outline: 2px solid #b7d1f9;
 }
 
 td {
-  background: #f9f9f9;
+  background-color: #fcfeff;
 }
 
 a {
@@ -57,14 +82,16 @@ a {
     padding: 10px 20px;
     margin: 10px;
     text-decoration: none;
-    background-color: #007bff;
-    color: white;
-    border-radius: 25px;
-    transition: background-color 0.3s ease;
+    background-color: rgb(240 249 255 / var(--tw-bg-opacity, 1));
+    color: rgb(2 132 199 / var(--tw-text-opacity, 1)); 
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 a:hover {
-    background-color: #0056b3;
+  background-color: rgb(220 229 251 / var(--tw-text-opacity, 1)); ;
+  transform: translateY(-2px);
 }
 
   </style>
