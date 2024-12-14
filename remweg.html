@@ -4,23 +4,116 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Remweg Calculator</title>
-    <link rel="stylesheet" href="styles.css">
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+        }
+
+        .container {
+            text-align: center;
+            border: 2px solid #bae6fd80; /* Border around the container */
+            border-radius: 10px; /* Rounded corners */
+            padding: 20px; /* Padding inside the container */
+            background-color: white; /* Background color for the container */
+            max-width: 500px; /* Maximum width for the container */
+            margin: auto; /* Center the container */
+            padding: 50px;
+            --tw-shadow: 0 25px 50px -12px rgb(0 0 0 / .25);
+            --tw-shadow-colored: 0 25px 50px -12px var(--tw-shadow-color);
+            box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+        }
+
+        h1 {
+            color: #2c3e50;
+            font-weight: 1000;
+            margin-bottom: 20px;
+            font-size: 3rem;
+            line-height: 1;
+            text-align: center;
+        }
+
+        label {
+            color: #2c3e50;
+            font-size: large;
+        }
+
+        input {
+            padding: 12px;
+            margin: 10px;
+            font-size: 16px;
+            border-radius: 15px;
+            border: 1px solid #ccc;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus {
+            border-radius: 10px;
+            outline: 2px solid #b7d1f9;
+        }
+
+        button {
+            border: 1px solid #ccc;
+            padding: 12px;
+            margin: 10px;
+            font-size: 16px;
+            text-decoration: none;
+            background-color: rgb(240 249 255 / var(--tw-bg-opacity, 1));
+            color: rgb(2 132 199 / var(--tw-text-opacity, 1)); 
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            width: 100%; /* Make buttons full width */
+            max-width: 300px; /* Optional: limit the width of buttons */
+        }
+
+        button:hover {
+            background-color: rgb(220 229 251 / var(--tw-text-opacity, 1)); ;
+            transform: translateY(-2px);
+        }
+
+        a {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 10px;
+            text-decoration: none;
+            background-color: rgb(240 249 255 / var(--tw-bg-opacity, 1));
+            color: rgb(2 132 199 / var(--tw-text-opacity, 1)); 
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        a:hover {
+        background-color: rgb(220 229 251 / var(--tw-text-opacity, 1)); ;
+        transform: translateY(-2px);
+        }
+
+    </style>
 </head>
 <body>
-    <h1>Bereken de Remweg</h1>
+    <nav>
+        <a href="index.html">Home</a>
+    </nav>
     
-    <label for="speed">Snelheid (km/h):</label>
-    <input type="number" id="speed" placeholder="Snelheid"><br>
+    <div class="container">
+        <h1>Bereken de Remweg</h1>
+        
+        <label for="speed">Snelheid (km/h):</label>
+        <input type="number" id="speed" placeholder="Snelheid"><br>
 
-    <label for="deceleration">Vertraging (-m/s²):</label>
-    <input type="number" id="deceleration" placeholder="Vertraging"><br>
+        <label for="deceleration">Vertraging (m/s²):</label>
+        <input type="number" id="deceleration" placeholder="Vertraging"><br>
 
-    <button onclick="calculateBrakingDistance()">Bereken Remweg</button>
+        <button onclick="calculateBrakingDistance()">Bereken Remweg</button>
 
-    <h2 id="result"></h2>
+        <h2 id="result"></h2>
 
-    <!-- Terug naar home knop -->
-    <button onclick="window.location.href='index.html'">Terug naar Home</button>
+    </div>
+
 
     <script>
         function calculateBrakingDistance() {
@@ -36,5 +129,6 @@
             }
         }
     </script>
+    
 </body>
 </html>
