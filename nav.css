@@ -1,0 +1,62 @@
+
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        /* Styling for the navigation button */
+        #navigation {
+            position: fixed; /* Keeps the link fixed to the top-left */
+            top: 10px; /* 10px from the top */
+            left: 10px; /* 10px from the left */
+            padding: 10px 20px; /* Padding inside the button */
+            text-decoration: none; /* Removes underline */
+            background-color: rgb(240 249 255 / var(--tw-bg-opacity, 1));
+            color: rgb(2 132 199 / var(--tw-text-opacity, 1)); 
+            border-radius: 15px; /* Rounded corners */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow for depth */
+            transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth hover effects */
+            z-index: 1000; /* Ensure it appears above other content */
+        }
+
+        #navigation:hover {
+            background-color: rgb(220 229 251 / var(--tw-text-opacity, 1)); /* Slightly darker on hover */
+            transform: translateY(-2px); /* Subtle hover lift effect */
+        }
+
+        /* Styling for the expanded navigation menu */
+        .menu {
+            display: none;
+            text-align: center;
+            border: 2px solid #bae6fd80; /* Border around the container */
+            border-radius: 10px; /* Rounded corners */
+            padding: 5px; /* Padding inside the container */
+            background-color: white; /* Background color for the container */
+            max-width: 500px; /* Maximum width for the container */
+            margin: 10px auto; /* Center the container */
+            padding: 10px;
+            --tw-shadow: 0 25px 50px -12px rgb(0 0 0 / .25);
+            --tw-shadow-colored: 0 25px 50px -12px var(--tw-shadow-color);
+            box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+        }
+
+        #navigation:hover .menu {
+            display: block;
+        }
+
+        .menu a {
+            display: block;
+            padding: 10px;
+            margin: 5px auto;
+            border-radius: 10px;
+            background-color: rgb(240 249 255 / var(--tw-bg-opacity, 1));
+            text-decoration: none;
+            color: #2c3e50;
+            font-weight: bold;
+            font-size: 14px;
+            transition: background-color 0.3s ease;
+        }
+
+        .menu a:hover {
+            background-color: rgb(220 229 251 / var(--tw-text-opacity, 1));
+        }
+    
