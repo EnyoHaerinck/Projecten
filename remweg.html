@@ -4,12 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Remweg Calculator</title>
+    <link rel="stylesheet" href="nav.css">
     <style>
 
         body {
             font-family: Arial, sans-serif;
             margin: 0;
-            padding: 0;
+            padding: 20px;
             background-color: #f4f4f9;
         }
 
@@ -17,10 +18,10 @@
             text-align: center;
             border: 2px solid #bae6fd80; /* Border around the container */
             border-radius: 10px; /* Rounded corners */
-            padding: 20px; /* Padding inside the container */
+            padding: 50px; /* Padding inside the container */
             background-color: white; /* Background color for the container */
             max-width: 500px; /* Maximum width for the container */
-            margin: auto; /* Center the container */
+            margin: 20px auto; /* Center the container */
             padding: 50px;
             --tw-shadow: 0 25px 50px -12px rgb(0 0 0 / .25);
             --tw-shadow-colored: 0 25px 50px -12px var(--tw-shadow-color);
@@ -75,28 +76,21 @@
             transform: translateY(-2px);
         }
 
-        a {
-            display: inline-block;
-            padding: 10px 20px;
-            margin: 10px;
-            text-decoration: none;
-            background-color: rgb(240 249 255 / var(--tw-bg-opacity, 1));
-            color: rgb(2 132 199 / var(--tw-text-opacity, 1)); 
-            border-radius: 15px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            transition: background-color 0.3s ease, transform 0.2s ease;
-        }
 
-        a:hover {
-        background-color: rgb(220 229 251 / var(--tw-text-opacity, 1)); ;
-        transform: translateY(-2px);
-        }
 
     </style>
 </head>
 <body>
     <nav>
-        <a href="index.html">Home</a>
+        <div id="navigation">
+            Menu
+            <div class="menu">
+                <a href="index.html">Home</a>
+                <a href="remweg.html">Remweg</a>
+                <a href="rapport.html">Rapport</a>
+                <a href="aitools.html">AI Tools</a>
+            </div>
+        </div>
     </nav>
     
     <div class="container">
@@ -129,6 +123,6 @@
             }
         }
     </script>
-    
+    <script src="nav.js"></script>
 </body>
 </html>
