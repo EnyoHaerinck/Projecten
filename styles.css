@@ -11,10 +11,9 @@ body {
 .container {
     border: 2px solid #bae6fd80; /* Border around the container */
     border-radius: 10px; /* Rounded corners */
-    padding: 20px; /* Padding inside the container */
     background-color: white; /* Background color for the container */
     max-width: 400px; /* Maximum width for the container */
-    margin: auto; /* Center the container */
+    margin: 20px auto; /* Center the container */
     padding: 50px;
     --tw-shadow: 0 25px 50px -12px rgb(0 0 0 / .25);
     --tw-shadow-colored: 0 25px 50px -12px var(--tw-shadow-color);
@@ -37,6 +36,7 @@ nav {
 }
 
 a {
+    font-weight: 600;
     padding: 15px 30px;
     margin: 10px 0; /* Vertical margin for spacing */
     text-decoration: none;
