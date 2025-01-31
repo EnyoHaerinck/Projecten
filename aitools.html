@@ -1,160 +1,163 @@
-import pygame
-import sys
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>List of AI Tools</title>
+    <link rel="stylesheet" href="nav.css">
+    <style>
+     body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #f4f4f9;
+}
 
-# Initialize Pygame
-pygame.init()
+.container {
+    border: 2px solid #bae6fd80;
+    border-radius: 10px;
+    padding: 20px;
+    background-color: white;
+    max-width: 400px;
+    margin: 20px auto;
+    padding: 30px;
+    --tw-shadow: 0 25px 50px -12px rgb(0 0 0 / .25);
+    --tw-shadow-colored: 0 25px 50px -12px var(--tw-shadow-color);
+    box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+    margin-bottom: 30px;
+}
 
-# Screen dimensions
-SCREEN_WIDTH = 800
-SCREEN_HEIGHT = 600
+h1 {
+    color: #2c3e50;
+    font-weight: 1000;
+    margin-bottom: 10px;
+    font-size: 3rem;
+    line-height: 1;
+    text-align: center;
+}
 
-# Colors
-WHITE = (255, 255, 255)
-BLACK = (0, 0, 0)
+ul {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
 
-# Paddle dimensions
-PADDLE_WIDTH = 10
-PADDLE_HEIGHT = 100
+li {
+    text-align: left;
+    border: 1px solid #ccc;
+    padding: 12px;
+    margin: 10px;
+    font-size: 16px;
+    background-color: rgb(240 249 255 / var(--tw-bg-opacity, 1));
+    color: rgb(2 132 199 / var(--tw-text-opacity, 1));
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    max-width: 300px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; /* Ensures icon is on the left */
+}
 
-# Ball dimensions
-BALL_SIZE = 10
+li:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    background-color: rgb(220 229 251 / var(--tw-text-opacity, 1));
+}
 
-# Speeds
-PADDLE_SPEED = 5
-BALL_SPEED_X = 7
-BALL_SPEED_Y = 7
+li img {
+    width: 20px;
+    height: 20px;
+    margin-right: 20px; /* Adds spacing between icon and text */
+}
 
-# Initialize screen
-screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-pygame.display.set_caption("Pong")
+button {
+    all: unset;
+    display: flex;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    align-items: center;  /* Ensures both icon and text are vertically aligned */
+    white-space: nowrap;  /* Prevents text from wrapping to the next line */
+}
 
-# Clock for controlling the frame rate
-clock = pygame.time.Clock()
-
-# Paddle positions
-left_paddle = pygame.Rect(20, (SCREEN_HEIGHT - PADDLE_HEIGHT) // 2, PADDLE_WIDTH, PADDLE_HEIGHT)
-right_paddle = pygame.Rect(SCREEN_WIDTH - 30, (SCREEN_HEIGHT - PADDLE_HEIGHT) // 2, PADDLE_WIDTH, PADDLE_HEIGHT)
-
-# Ball position and velocity
-ball = pygame.Rect(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2, BALL_SIZE, BALL_SIZE)
-ball_velocity = [BALL_SPEED_X, BALL_SPEED_Y]
-
-# Scores
-left_score = 0
-right_score = 0
-
-# Font for displaying scores
-font = pygame.font.Font(None, 74)
-button_font = pygame.font.Font(None, 50)
-
-# Win condition
-WIN_SCORE = 10
-
-def reset_ball():
-    ball.center = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
-    ball_velocity[0] *= -1
-
-def draw_objects():
-    screen.fill(BLACK)
-    pygame.draw.rect(screen, WHITE, left_paddle)
-    pygame.draw.rect(screen, WHITE, right_paddle)
-    pygame.draw.ellipse(screen, WHITE, ball)
-    pygame.draw.aaline(screen, WHITE, (SCREEN_WIDTH // 2, 0), (SCREEN_WIDTH // 2, SCREEN_HEIGHT))
-
-    left_text = font.render(str(left_score), True, WHITE)
-    right_text = font.render(str(right_score), True, WHITE)
-    screen.blit(left_text, (SCREEN_WIDTH // 4, 20))
-    screen.blit(right_text, (SCREEN_WIDTH * 3 // 4, 20))
-
-def draw_win_screen(winner):
-    screen.fill(BLACK)
-    win_text = font.render(f"{winner} wint!", True, WHITE)
-    restart_text = button_font.render("Opnieuw spelen", True, WHITE)
-    win_rect = win_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 3))
-    button_rect = restart_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
-    
-    screen.blit(win_text, win_rect)
-    pygame.draw.rect(screen, WHITE, button_rect, 2)
-    screen.blit(restart_text, button_rect)
-    return button_rect
-
-def reset_game():
-    global left_score, right_score, ball_velocity
-    left_score = 0
-    right_score = 0
-    reset_ball()
-
-# Main game loop
-running = True
-win_screen = False
-winner = ""
-
-while running:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-        if win_screen and event.type == pygame.MOUSEBUTTONDOWN:
-            if button_rect.collidepoint(event.pos):
-                reset_game()
-                win_screen = False
-
-    if not win_screen:
-        # Get keys
-        keys = pygame.key.get_pressed()
-        if keys[pygame.K_w] and left_paddle.top > 0:
-            left_paddle.y -= PADDLE_SPEED
-        if keys[pygame.K_s] and left_paddle.bottom < SCREEN_HEIGHT:
-            left_paddle.y += PADDLE_SPEED
-        if keys[pygame.K_UP] and right_paddle.top > 0:
-            right_paddle.y -= PADDLE_SPEED
-        if keys[pygame.K_DOWN] and right_paddle.bottom < SCREEN_HEIGHT:
-            right_paddle.y += PADDLE_SPEED
-
-        # AI control for left paddle
-        if ball.centery < left_paddle.centery and left_paddle.top > 0:
-            left_paddle.y -= PADDLE_SPEED
-        if ball.centery > left_paddle.centery and left_paddle.bottom < SCREEN_HEIGHT:
-            left_paddle.y += PADDLE_SPEED
+button span {
+    text-align: left; /* Aligns text to the left */
+    flex-grow: 1; /* Ensures that text is allowed to fill available space */
+}
 
 
-        # Move ball
-        ball.x += ball_velocity[0]
-        ball.y += ball_velocity[1]
 
-        # Ball collision with top and bottom
-        if ball.top <= 0 or ball.bottom >= SCREEN_HEIGHT:
-            ball_velocity[1] *= -1
 
-        # Ball collision with paddles
-        if ball.colliderect(left_paddle) or ball.colliderect(right_paddle):
-            ball_velocity[0] *= -1
 
-        # Ball out of bounds
-        if ball.left <= 0:
-            right_score += 1
-            reset_ball()
-        if ball.right >= SCREEN_WIDTH:
-            left_score += 1
-            reset_ball()
+    </style>
+</head>
+<body>
 
-        # Check win condition
-        if left_score >= WIN_SCORE:
-            win_screen = True
-            winner = "Links"
-        elif right_score >= WIN_SCORE:
-            win_screen = True
-            winner = "Rechts"
+    <nav>
+        <div id="navigation">
+            Menu
+            <div class="menu">
+                <a href="index.html">Home</a>
+                <a href="remweg.html">Remweg</a>
+                <a href="rapport.html">Rapport</a>
+                <a href="aitools.html">AI Tools</a>
+            </div>
+        </div>
+    </nav>
 
-        # Draw everything
-        draw_objects()
-    else:
-        button_rect = draw_win_screen(winner)
+    <div class="container">
 
-    # Update display
-    pygame.display.flip()
-
-    # Cap the frame rate
-    clock.tick(60)
-
-pygame.quit()
-sys.exit()
+        <h1>List of AI Tools</h1>
+        <ul>
+            <li>
+                <button onclick="window.open('https://www.openai.com/chatgpt', '_blank')">
+                    <img src="https://openai.com/favicon.ico" alt="ChatGPT Logo">
+                    <span>ChatGPT - Chat Bot</span>
+                </button>
+            </li>
+        
+            <li>
+                <button onclick="window.open('https://elevenlabs.io/', '_blank')">
+                    <img src="https://elevenlabs.io/favicon.ico" alt="Elevenlabs Logo">
+                    <span>Elevenlabs - Ai Stemmen</span>
+                </button>
+            </li>
+        
+            <li>
+                <button onclick="window.open('https://openai.com/index/dall-e-2/', '_blank')">
+                    <img src="https://openai.com/favicon.ico" alt="DALL-E Logo">
+                    <span>DALL-E - Foto Genereren</span>
+                </button>
+            </li>
+        
+            <li>
+                <button onclick="window.open('https://suno.com/', '_blank')">
+                    <img src="https://suno.com/favicon.ico" alt="Suno Logo">
+                    <span>Suno - Lied Maken</span>
+                </button>
+            </li>
+        
+            <li>
+                <button onclick="window.open('https://viggle.ai/', '_blank')">
+                    <img src="https://viggle.ai/favicon.ico" alt="Viggle Logo">
+                    <span>Viggle - Foto fuseren met Video</span>
+                </button>
+            </li>
+        
+            <li>
+                <button onclick="window.open('https://lumalabs.ai/dream-machine', '_blank')">
+                    <img src="https://static.cdn-luma.com/files/dm-landing/shared/favicon-black.ico" alt="Luma Logo">
+                    <span>Luma - Foto's tot leven brengen</span>
+                </button>
+            </li>
+        </ul>
+        
+    </div>
+    <script src="nav.js"></script>
+</body>
+</html>
