@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Projecten</h1>
+        <nav>
+            <a href="#" onclick="checkRemwegCode()">Remweg Calculator</a>
+            <a href="#" onclick="checkRapportCode()">Rapport Calculator</a>
+            <a href="#" onclick="checkAItoolsCode()">AI</a>
+            <a href="#" onclick="openGamesPopup()">Games</a>
+        </nav>
+    </div>
+
+    <!-- Pop-up container -->
+    <div id="gamesPopup" class="popup">
+        <div class="popup-content">
+            <h2>Mijn Games</h2>
+            <ul>
+                <a href="2048.html" target="_blank">2048</a>
+            </ul>
+            <button onclick="closeGamesPopup()">Sluiten</button>
+        </div>
+    </div>
+
+    <script>
+        function openGamesPopup() {
+            document.getElementById("gamesPopup").style.display = "flex";
+        }
+
+        function closeGamesPopup() {
+            document.getElementById("gamesPopup").style.display = "none";
+        }
+    </script>
+
+</body>
+</html>

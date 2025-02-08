@@ -88,7 +88,7 @@ td {
     <div id="navigation">
         Menu
         <div class="menu">
-            <a href="index.html">Home</a>
+            <a href="home.html">Home</a>
             <a href="remweg.html">Remweg</a>
             <a href="rapport.html">Rapport</a>
             <a href="aitools.html">AI Tools</a>
@@ -101,8 +101,8 @@ td {
         <thead>
           <tr>
             <th>Vak</th>
-            <th>Totaal Te Verdienen</th>
             <th>Totaal Verdiend</th>
+            <th>Totaal Te Verdienen</th>
             <th>Procent</th>
             <th>Verdiend / Max Punten</th>
           </tr>
@@ -146,13 +146,7 @@ td {
       vakCell.textContent = vak.naam;
       row.appendChild(vakCell);
 
-      // Totaal te verdienen
-      const totaalTeVerdienenCell = document.createElement("td");
-      const totaalTeVerdienenInput = document.createElement("input");
-      totaalTeVerdienenInput.type = "number";
-      totaalTeVerdienenInput.id = `totaalTeVerdienen-${index}`;
-      totaalTeVerdienenCell.appendChild(totaalTeVerdienenInput);
-      row.appendChild(totaalTeVerdienenCell);
+
 
       // Totaal verdiend
       const totaalVerdiendCell = document.createElement("td");
@@ -161,6 +155,14 @@ td {
       totaalVerdiendInput.id = `totaalVerdiend-${index}`;
       totaalVerdiendCell.appendChild(totaalVerdiendInput);
       row.appendChild(totaalVerdiendCell);
+
+       // Totaal te verdienen
+       const totaalTeVerdienenCell = document.createElement("td");
+      const totaalTeVerdienenInput = document.createElement("input");
+      totaalTeVerdienenInput.type = "number";
+      totaalTeVerdienenInput.id = `totaalTeVerdienen-${index}`;
+      totaalTeVerdienenCell.appendChild(totaalTeVerdienenInput);
+      row.appendChild(totaalTeVerdienenCell);
 
       // Procent
       const procentCell = document.createElement("td");

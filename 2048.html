@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <title>2048</title>
+  <link rel="stylesheet" href="nav.css">
+  <style>
+    /* Algemene styling */
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f9;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      position: relative;
+    }
+    #game {
+      width: 450px;
+      position: relative;
+      padding: 20px;
+      border-radius: 10px;
+      --tw-shadow: 0 25px 50px -12px rgb(0 0 0 / .25);
+      --tw-shadow-colored: 0 25px 50px -12px var(--tw-shadow-color);
+      box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+      border: 5px solid #bbada0;
+    }
+    /* Header met titel en score */
+    #header {
+        color: #2c3e50;
+        font-weight: 1000;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    #score-container {
+      display: flex;
+      align-items: center;
+    }
+    #score-container div {
+      margin-right: 40px;
+      border-radius: 19px;
+      --tw-shadow: 0 25px 50px -12px rgb(0 0 0 / .25);
+      --tw-shadow-colored: 0 25px 50px -12px var(--tw-shadow-color);
+      box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+      text-align: center;
+      border: 5px solid #bbada0;
+      padding: 0px 20px;
+    }
+    button {
+        border: 5px solid #bbada0;
+        padding: 10px;
+        margin: 10px;
+        font-size: 16px;
+        text-decoration: none;
+        color: #2c3e50;
+        font-weight: 1000;
+        border-radius: 19px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        transition: background-color 0.3s ease, transform 0.2s ease;
+        width: 100%; /* Make buttons full width */
+        max-width: 300px; /* Optional: limit the width of buttons */
+    }
+    /* Bord styling (4x4 grid) */
+    #board {
+      background: #bbada0;
+      border-radius: 5px;
+      padding: 10px;
+      display: grid;
+      grid-template-columns: repeat(4, 100px);
+      grid-gap: 10px;
+    }
+    .cell {
+      width: 100px;
+      height: 100px;
+      background: #cdc1b4;
+      border-radius: 5px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 40px;
+      font-weight: bold;
+      color: #776e65;
+    }
+    /* Overlay bij game over */
+    #game-over-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255,255,255,0.8);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      font-size: 30px;
+      color: #2c3e50;
+      font-weight: 1000;
+      z-index: 10;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div id="navigation">
+        Menu
+        <div class="menu">
+            <a href="home.html">Home</a>
+            <a href="remweg.html">Remweg</a>
+            <a href="rapport.html">Rapport</a>
+            <a href="aitools.html">AI Tools</a>
+        </div>
+    </div>
+  </nav>
+
+  <div id="game">
+    <div id="header">
+      <h1>2048</h1>
+      <div id="score-container">
+        <div>Score: <span id="score">0</span></div>
+        <button id="restart">Restart</button>
+      </div>
+    </div>
+    <div id="board"></div>
+    <div id="game-over-overlay">
+      <div>
+        Game Over!<br>
+        Druk op R of klik op Restart om opnieuw te starten.
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // JavaScript-code voor 2048
+    document.addEventListener("DOMContentLoaded", function() {
+      const GRID_SIZE = 4;
+      let board = [];
+      let score = 0;
+      let gameOver = false;
+
+      const boardContainer = document.getElementById("board");
+      const scoreElement = document.getElementById("score");
+      const restartButton = document.getElementById("restart");
+      const gameOverOverlay = document.getElementById("game-over-overlay");
+
+      // Maak de 4x4 cellen aan in het bord
+      for (let i = 0; i < GRID_SIZE; i++) {
+        for (let j = 0; j < GRID_SIZE; j++) {
+          const cell = document.createElement("div");
+          cell.classList.add("cell");
+          cell.id = `cell-${i}-${j}`;
+          boardContainer.appendChild(cell);
+        }
+      }
+
+      // Initialiseert het spel
+      function initGame() {
+        board = [];
+        score = 0;
+        gameOver = false;
+        hideGameOver();
+        for (let i = 0; i < GRID_SIZE; i++) {
+          board[i] = [];
+          for (let j = 0; j < GRID_SIZE; j++) {
+            board[i][j] = 0;
+          }
+        }
+        spawnTile();
+        spawnTile();
+        updateBoard();
+      }
+
+      // Plaats een nieuwe tegel (2 of 4) op een willekeurige lege plek
+      function spawnTile() {
+        let emptyCells = [];
+        for (let i = 0; i < GRID_SIZE; i++) {
+          for (let j = 0; j < GRID_SIZE; j++) {
+            if (board[i][j] === 0) {
+              emptyCells.push({ i, j });
+            }
+          }
+        }
+        if (emptyCells.length > 0) {
+          const randIndex = Math.floor(Math.random() * emptyCells.length);
+          const cell = emptyCells[randIndex];
+          board[cell.i][cell.j] = Math.random() < 0.1 ? 4 : 2; // 10% kans op 4
+        }
+      }
+
+      // Update de inhoud en styling van het bord
+      function updateBoard() {
+        for (let i = 0; i < GRID_SIZE; i++) {
+          for (let j = 0; j < GRID_SIZE; j++) {
+            const cell = document.getElementById(`cell-${i}-${j}`);
+            const value = board[i][j];
+            cell.textContent = value !== 0 ? value : "";
+            cell.style.backgroundColor = getTileColor(value);
+          }
+        }
+        scoreElement.textContent = score;
+        if (checkGameOver()) {
+          gameOver = true;
+          showGameOver();
+        }
+      }
+
+      // Retourneert de achtergrondkleur voor een tegel, gebaseerd op de waarde
+      function getTileColor(value) {
+        const tileColors = {
+          0: "#cdc1b4",
+          2: "#eee4da",
+          4: "#ede0c8",
+          8: "#f2b179",
+          16: "#f59563",
+          32: "#f67c5f",
+          64: "#f65e3b",
+          128: "#edcf72",
+          256: "#edcc61",
+          512: "#edc850",
+          1024: "#edc53f",
+          2048: "#edc22e"
+        };
+        return tileColors[value] || "#3c3a32";
+      }
+
+      // Verwerk één rij: schuif niet-nul waarden naar links en merge gelijke getallen
+      function mergeRow(row) {
+        let newRow = row.filter(val => val !== 0);
+        let gained = 0;
+        for (let i = 0; i < newRow.length - 1; i++) {
+          if (newRow[i] === newRow[i + 1]) {
+            newRow[i] *= 2;
+            gained += newRow[i];
+            newRow[i + 1] = 0;
+            i++; // sla de volgende over
+          }
+        }
+        newRow = newRow.filter(val => val !== 0);
+        while (newRow.length < GRID_SIZE) {
+          newRow.push(0);
+        }
+        return { newRow, gained };
+      }
+
+      // Controleer of twee arrays gelijk zijn
+      function arraysEqual(a, b) {
+        if (a.length !== b.length) return false;
+        for (let i = 0; i < a.length; i++) {
+          if (a[i] !== b[i]) return false;
+        }
+        return true;
+      }
+
+      // Verplaats naar links
+      function moveLeft() {
+        let moved = false;
+        for (let i = 0; i < GRID_SIZE; i++) {
+          const originalRow = board[i].slice();
+          const { newRow, gained } = mergeRow(board[i]);
+          if (!arraysEqual(newRow, originalRow)) {
+            board[i] = newRow;
+            moved = true;
+            score += gained;
+          }
+        }
+        return moved;
+      }
+
+      // Verplaats naar rechts
+      function moveRight() {
+        let moved = false;
+        for (let i = 0; i < GRID_SIZE; i++) {
+          const originalRow = board[i].slice();
+          const reversed = board[i].slice().reverse();
+          const { newRow, gained } = mergeRow(reversed);
+          newRow.reverse();
+          if (!arraysEqual(newRow, originalRow)) {
+            board[i] = newRow;
+            moved = true;
+            score += gained;
+          }
+        }
+        return moved;
+      }
+
+      // Transponeer (rijen worden kolommen en omgekeerd)
+      function transpose(matrix) {
+        let newMatrix = [];
+        for (let i = 0; i < GRID_SIZE; i++) {
+          newMatrix[i] = [];
+          for (let j = 0; j < GRID_SIZE; j++) {
+            newMatrix[i][j] = matrix[j][i];
+          }
+        }
+        return newMatrix;
+      }
+
+      // Verplaats omhoog (transposeer, beweeg links en transposeer weer terug)
+      function moveUp() {
+        board = transpose(board);
+        const moved = moveLeft();
+        board = transpose(board);
+        return moved;
+      }
+
+      // Verplaats omlaag (transposeer, beweeg rechts en transposeer weer terug)
+      function moveDown() {
+        board = transpose(board);
+        const moved = moveRight();
+        board = transpose(board);
+        return moved;
+      }
+
+      // Controleer of er geen zetten meer mogelijk zijn
+      function checkGameOver() {
+        // Als er nog een lege cel is, is het spel niet voorbij
+        for (let i = 0; i < GRID_SIZE; i++) {
+          for (let j = 0; j < GRID_SIZE; j++) {
+            if (board[i][j] === 0) return false;
+          }
+        }
+        // Controleer op mogelijke merges horizontaal
+        for (let i = 0; i < GRID_SIZE; i++) {
+          for (let j = 0; j < GRID_SIZE - 1; j++) {
+            if (board[i][j] === board[i][j + 1]) return false;
+          }
+        }
+        // Controleer op mogelijke merges verticaal
+        for (let j = 0; j < GRID_SIZE; j++) {
+          for (let i = 0; i < GRID_SIZE - 1; i++) {
+            if (board[i][j] === board[i + 1][j]) return false;
+          }
+        }
+        return true;
+      }
+
+      // Toon het game over-overlay
+      function showGameOver() {
+        gameOverOverlay.style.display = "flex";
+      }
+      // Verberg het overlay
+      function hideGameOver() {
+        gameOverOverlay.style.display = "none";
+      }
+
+      // Luister naar pijltjestoetsen voor bewegingen
+      document.addEventListener("keydown", function(e) {
+        // Als het spel voorbij is en op 'r' wordt gedrukt, herstart het spel
+        if (gameOver && e.key.toLowerCase() === "r") {
+          initGame();
+          return;
+        }
+        let moved = false;
+        if (e.key === "ArrowLeft") {
+          moved = moveLeft();
+        } else if (e.key === "ArrowRight") {
+          moved = moveRight();
+        } else if (e.key === "ArrowUp") {
+          moved = moveUp();
+        } else if (e.key === "ArrowDown") {
+          moved = moveDown();
+        }
+        if (moved) {
+          spawnTile();
+          updateBoard();
+        }
+      });
+
+      // Luister naar klikken op de Restart-knop
+      restartButton.addEventListener("click", function() {
+        initGame();
+      });
+
+      // Start het spel
+      initGame();
+    });
+  </script>
+</body>
+</html>
