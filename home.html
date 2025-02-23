@@ -29,6 +29,38 @@
     </div>
 
     <script>
+
+        function checkRemwegCode() {
+            const userCode = prompt("Voer de toegangscode in voor de Remweg Calculator:");
+            const correctCode = "5TWE";
+            if (userCode === correctCode) {
+                window.location.href = "remweg.html";
+            } else {
+                alert("Onjuiste code. Toegang geweigerd.");
+            }
+        }
+
+        function checkRapportCode() {
+            const userCode = prompt("Voer de toegangscode in voor de Rapport Calculator:");
+            const correctCode = "5TWE";
+            if (userCode === correctCode) {
+                window.location.href = "rapport.html";
+            } else {
+                alert("Onjuiste code. Toegang geweigerd.");
+            }
+        }
+
+        function checkAItoolsCode() {
+            const userCode = prompt("Voer de toegangscode in voor AI");
+            const correctCode = "5TWE";
+            if (userCode === correctCode) {
+                window.location.href = "aitools.html";
+            } else {
+                alert("Onjuiste code. Toegang geweigerd.");
+            }
+        }
+
+
         function openGamesPopup() {
             document.getElementById("gamesPopup").style.display = "flex";
         }
