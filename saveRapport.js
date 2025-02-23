@@ -117,7 +117,7 @@ document.addEventListener("DOMContentLoaded", () => {
             
             // Toon de naam en de opslagtijd
             let reportInfo = document.createElement("span");
-            reportInfo.textContent = `${report.name} (Opgeslagen: ${new Date(report.savedAt).toLocaleString()}) `;
+            reportInfo.innerHTML = `${report.name} <strong>${report.totals.totalPercentage}</strong> (Opgeslagen: ${new Date(report.savedAt).toLocaleString()}) `;
             li.appendChild(reportInfo);
             
             // Laadknop
