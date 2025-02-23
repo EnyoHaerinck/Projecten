@@ -20,7 +20,7 @@
   padding: 20px; /* Padding inside the container */
   background-color: white; /* Background color for the container */
   max-width: 800px; /* Maximum width for the container */
-  margin: 20px auto;
+  margin: 10px auto;
   padding: 50px;
   --tw-shadow: 0 25px 50px -12px rgb(0 0 0 / .25);
   --tw-shadow-colored: 0 25px 50px -12px var(--tw-shadow-color);
@@ -78,9 +78,66 @@ td {
   background-color: #fcfeff;
 }
 
+#loginForm {
+  text-align: center;
+  width: 200px;
+  position: fixed;
+  left: 60px;
+  top: 70px;
 
+  border: 2px solid #bae6fd80; /* Border around the container */
+  border-radius: 10px; /* Rounded corners */
+  padding: 10px;
+  background-color: white; /* Background color for the container */
+  --tw-shadow: 0 25px 50px -12px rgb(0 0 0 / .25);
+  --tw-shadow-colored: 0 25px 50px -12px var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
 
-  </style>
+button, #loginUser, #registerUser {
+  text-decoration: none;
+  border: none;
+  background-color: rgb(240 249 255 / var(--tw-bg-opacity, 1));
+  color: rgb(2 132 199 / var(--tw-text-opacity, 1)); 
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  padding: 10px;
+  margin: 2px;
+}
+
+button:hover {
+  background-color: rgb(220 229 251 / var(--tw-text-opacity, 1)); ;
+   transform: translateY(-2px);
+}
+
+#saveRapport {
+  text-decoration: none;
+  border: none;
+  background-color: rgb(132, 238, 185);
+  color: black; 
+  font-weight: bold;
+  border-radius: 9px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  padding: 10px;
+  margin: 4px;
+}
+
+#username, #password {
+  margin-bottom: 2px;
+}
+
+h2 {
+  text-align: center;
+  color: #2c3e50;
+  font-weight: 1000;
+  margin: 0;
+  font-size: 25px;
+  line-height: 0;
+}
+
+</style>
 
 </head>
 <body>
@@ -95,27 +152,45 @@ td {
         </div>
     </div>
   </nav>
-    <div class="container">
-      <h1>Rapport Berekening</h1>
-      <table>
-        <thead>
-          <tr>
-            <th>Vak</th>
-            <th>Totaal Verdiend</th>
-            <th>Totaal Te Verdienen</th>
-            <th>Procent</th>
-            <th>Verdiend / Max Punten</th>
-          </tr>
-        </thead>
-        <tbody id="rapportTable">
-          <!-- De rijen worden hier dynamisch gegenereerd -->
-        </tbody>
-      </table>
-      <div class="chart-container">
-        <canvas id="procentChart"></canvas>
-      </div>
-      
+
+  <form id="loginForm">
+    <input type="text" id="username" placeholder="Gebruikersnaam" required>
+    <input type="password" id="password" placeholder="Wachtwoord" required>
+    <button id="loginUser" type="submit">Login</button>
+    <button id="registerUser" type="button">Registreer</button>
+    <button id="saveRapport" type="button">Rapport opslaan</button>
+    <button id="logoutButton" type="button">Uitloggen</button>
+
+  </form>
+  
+
+  <!-- Lijst met opgeslagen rapporten -->
+  <div class="container">
+    <h2>Opgeslagen Rapporten</h2>
+    <ul id="rapportList"></ul>
+  </div>
+
+  <!-- Rapport Berekening Tabel en Grafiek -->
+  <div class="container">
+    <h1>Rapport Berekening</h1>
+    <table>
+      <thead>
+        <tr>
+          <th>Vak</th>
+          <th>Totaal Verdiend</th>
+          <th>Totaal Te Verdienen</th>
+          <th>Procent</th>
+          <th>Verdiend / Max Punten</th>
+        </tr>
+      </thead>
+      <tbody id="rapportTable">
+        <!-- De rijen worden hier dynamisch gegenereerd -->
+      </tbody>
+    </table>
+    <div class="chart-container">
+      <canvas id="procentChart"></canvas>
     </div>
+  </div>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
       const vakken = [
@@ -148,21 +223,24 @@ td {
 
 
 
-      // Totaal verdiend
+     // Totaal verdiend
       const totaalVerdiendCell = document.createElement("td");
       const totaalVerdiendInput = document.createElement("input");
       totaalVerdiendInput.type = "number";
       totaalVerdiendInput.id = `totaalVerdiend-${index}`;
+      totaalVerdiendInput.value = ""; // Zet standaardwaarde op 0
       totaalVerdiendCell.appendChild(totaalVerdiendInput);
       row.appendChild(totaalVerdiendCell);
 
-       // Totaal te verdienen
-       const totaalTeVerdienenCell = document.createElement("td");
+      // Totaal te verdienen
+      const totaalTeVerdienenCell = document.createElement("td");
       const totaalTeVerdienenInput = document.createElement("input");
       totaalTeVerdienenInput.type = "number";
       totaalTeVerdienenInput.id = `totaalTeVerdienen-${index}`;
+      totaalTeVerdienenInput.value = ""; // Zet standaardwaarde op 0
       totaalTeVerdienenCell.appendChild(totaalTeVerdienenInput);
       row.appendChild(totaalTeVerdienenCell);
+
 
       // Procent
       const procentCell = document.createElement("td");
@@ -312,5 +390,6 @@ td {
 
     </script>
     <script src="nav.js"></script>
+    <script src="saveRapport.js"></script>
   </body>
 </html>
