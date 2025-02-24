@@ -136,6 +136,81 @@ h2 {
   font-size: 25px;
   line-height: 0;
 }
+/* Mobiele CSS-stijlen */
+@media screen and (max-width: 768px) {
+  body {
+    padding: 10px;
+  }
+
+  .container {
+    padding: 15px;
+    max-width: 100%;
+    margin: 10px auto;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+  }
+
+  table {
+    font-size: 12px;
+    border-width: 2px;
+    width: 100%;
+  }
+
+  th, td {
+    padding: 3px;
+    font-size: 10px;
+  }
+
+  input {
+    width: 75%;
+    font-size: 12px;
+    padding: 3px;
+  }
+
+  button, #loginUser, #registerUser, #saveRapport {
+    padding: 6px;
+    font-size: 12px;
+  }
+
+  #loginForm {
+    width: 90%;
+    padding: 15px;
+    margin-bottom: 20px;
+    --tw-shadow: 0 25px 50px -12px rgb(0 0 0 / .25);
+    --tw-shadow-colored: 0 15px 10px -6px var(--tw-shadow-color);
+    box-shadow: var(--tw-ring-offset-shadow, 0 0 #60606000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+    top: 10px;
+    left: 50%;
+    position: relative;
+    transform: translateX(-50%);
+  }
+
+  #username, #password {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+  }
+
+  nav {
+    font-size: 12px;
+    padding: 8px;
+    
+  }
+
+  .menu a {
+    display: block;
+    padding: 8px;
+  }
+}
+
+
 
 </style>
 
