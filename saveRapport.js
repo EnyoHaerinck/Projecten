@@ -1,25 +1,24 @@
 document.addEventListener("DOMContentLoaded", () => {
 
+    // Verwijder de ingelogde gebruiker bij het laden (optioneel)
     localStorage.removeItem("loggedInUser");
 
     const logoutButton = document.getElementById("logoutButton");
-
-    logoutButton.addEventListener("click", () => {
-        localStorage.removeItem("loggedInUser");
-        // Maak de loginvelden leeg
-        usernameInput.value = "";
-        passwordInput.value = "";
-        alert("Je bent uitgelogd!");
-        // Optioneel: maak ook de rapportlijst leeg
-        rapportList.innerHTML = "";
-    });
-
-
     const loginForm = document.getElementById("loginForm");
     const saveButton = document.getElementById("saveRapport");
     const usernameInput = document.getElementById("username");
     const passwordInput = document.getElementById("password");
     const rapportList = document.getElementById("rapportList");
+    let loadedRapportIndex = null; // Houdt bij welk rapport geladen is
+
+    logoutButton.addEventListener("click", () => {
+        localStorage.removeItem("loggedInUser");
+        usernameInput.value = "";
+        passwordInput.value = "";
+        alert("Je bent uitgelogd!");
+        rapportList.innerHTML = "";
+        logoutButton.style.display = "none";
+    });
 
     function saveUser(username, password) {
         let users = JSON.parse(localStorage.getItem("users")) || [];
@@ -42,9 +41,11 @@ document.addEventListener("DOMContentLoaded", () => {
         localStorage.setItem("loggedInUser", username);
         alert("Login succesvol!");
         loadRapportList(username);
+        logoutButton.style.display = "inline-block";
     }
 
-    function saveRapport() {
+    // Functie om een rapport op te slaan. Als update true is, wordt het geladen rapport overschreven.
+    function saveRapport(update = false) {
         let username = localStorage.getItem("loggedInUser");
         if (!username) {
             alert("Je moet inloggen!");
@@ -53,25 +54,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
         let rapporten = JSON.parse(localStorage.getItem("rapporten")) || {};
         let rapportData = [];
-        
-        // Selecteer alle rijen behalve de totaalrij (de laatste rij)
+
+        // Verzamelen van data uit de dynamische tabel (behalve de totaalrij)
         const rows = document.querySelectorAll("#rapportTable tr");
         for (let i = 0; i < rows.length - 1; i++) {
             const row = rows[i];
             const cells = row.querySelectorAll("td");
             if (cells.length >= 3) {
                 const vak = cells[0].textContent;
-                const totaalVerdiend = cells[1].querySelector("input").value || "0";
-                const totaalTeVerdienen = cells[2].querySelector("input").value || "0";
-                // Haal ook de berekende waarden (als je deze wilt opslaan)
-                const computedProcent = cells[3].textContent || "";
-                const computedVerdiend = cells[4].textContent || "";
+                const totaalVerdiend = cells[1].querySelector("input").value;
+                const totaalTeVerdienen = cells[2].querySelector("input").value;
+                const computedProcent = cells[3].textContent;
+                const computedVerdiend = cells[4].textContent;
                 rapportData.push({ vak, totaalVerdiend, totaalTeVerdienen, computedProcent, computedVerdiend });
             }
         }
-        
-        // Haal de totaalcijfers uit de totaalrij
-        const totalText = document.getElementById("totaalVerdiendMax").textContent; // bijv. "100.00 / 200.00"
+
+        // Haal de totaalrij op
+        const totalText = document.getElementById("totaalVerdiendMax").textContent;
         let totalVerdiend = "";
         let totalMaxPunten = "";
         if (totalText) {
@@ -79,13 +79,11 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         const totalPercentage = document.getElementById("totaalProcent").textContent || "";
 
-        // Vraag de gebruiker een naam voor het rapport
-        let reportName = prompt("Geef een naam op voor het rapport:");
+        let reportName = update ? rapporten[username][loadedRapportIndex].name : prompt("Geef een naam op voor het rapport:");
         if (!reportName) {
-            reportName = "Onbenoemd rapport ";
+            reportName = "Onbenoemd rapport";
         }
-        
-        // Maak een rapportobject aan
+
         const reportObject = {
             name: reportName,
             data: rapportData,
@@ -96,98 +94,27 @@ document.addEventListener("DOMContentLoaded", () => {
             },
             savedAt: new Date().toISOString()
         };
-        
+
         if (!rapporten[username]) {
             rapporten[username] = [];
         }
-        rapporten[username].push(reportObject);
+        if (update && loadedRapportIndex !== null) {
+            rapporten[username][loadedRapportIndex] = reportObject;
+        } else {
+            rapporten[username].push(reportObject);
+        }
+
         localStorage.setItem("rapporten", JSON.stringify(rapporten));
-        alert("Rapport opgeslagen!");
+        alert(update ? "Rapport geüpdatet!" : "Rapport opgeslagen!");
+        clearInputs();
         loadRapportList(username);
+        loadedRapportIndex = null; // Reset geladen rapport
     }
 
-    function loadRapportList(username) {
-        let rapporten = JSON.parse(localStorage.getItem("rapporten")) || {};
-        let userRapporten = rapporten[username] || [];
-        rapportList.innerHTML = "";
-
-        userRapporten.forEach((report, index) => {
-            let li = document.createElement("li");
-            li.style.marginBottom = "5px";
-            
-            // Toon de naam en de opslagtijd
-            let reportInfo = document.createElement("span");
-            reportInfo.innerHTML = `${report.name} <strong>${report.totals.totalPercentage}</strong> (Opgeslagen: ${new Date(report.savedAt).toLocaleString()}) `;
-            li.appendChild(reportInfo);
-            
-            // Laadknop
-            let loadButton = document.createElement("button");
-            loadButton.textContent = "Laad";
-            loadButton.addEventListener("click", () => loadRapport(username, index));
-            li.appendChild(loadButton);
-            
-            // Verwijderknop
-            let deleteButton = document.createElement("button");
-            deleteButton.textContent = "Verwijder";
-            deleteButton.style.marginLeft = "10px";
-            deleteButton.addEventListener("click", () => deleteRapport(username, index));
-            li.appendChild(deleteButton);
-            
-            rapportList.appendChild(li);
-        });
-    }
-
-    function loadRapport(username, index) {
-        let rapporten = JSON.parse(localStorage.getItem("rapporten")) || {};
-        let reportObject = rapporten[username]?.[index];
-        if (!reportObject) return;
-        let rapportData = reportObject.data;
-        
-        const rows = document.querySelectorAll("#rapportTable tr");
-        // Doorloop de vakrijen (behalve de totaalrij)
-        rapportData.forEach((rowData, i) => {
-            if (i < rows.length - 1) {
-                let cells = rows[i].querySelectorAll("td");
-                // Laad de inputwaarden alleen als de opgeslagen waarde niet 0 is;
-                // anders laat je het veld leeg zodat de placeholder blijft.
-                const totaalVerdiend = rowData.totaalVerdiend;
-                const totaalTeVerdienen = rowData.totaalTeVerdienen;
-                cells[1].querySelector("input").value = (totaalVerdiend === "0" || totaalVerdiend == 0) ? "" : totaalVerdiend;
-                cells[2].querySelector("input").value = (totaalTeVerdienen === "0" || totaalTeVerdienen == 0) ? "" : totaalTeVerdienen;
-                // Update de berekeningen voor deze rij (de computed velden worden dan opnieuw berekend)
-                updateRow(i);
-            }
-        });
-        
-        // Laad de totaalrij op dezelfde manier
-        if (reportObject.totals) {
-            const totalVerdiend = reportObject.totals.totalVerdiend;
-            const totalMaxPunten = reportObject.totals.totalMaxPunten;
-            const totalPercentage = reportObject.totals.totalPercentage;
-            document.getElementById("totaalVerdiendMax").textContent = 
-                ((totalVerdiend === "0" || totalVerdiend == 0 || totalMaxPunten === "0" || totalMaxPunten == 0) 
-                ? "" 
-                : `${totalVerdiend} / ${totalMaxPunten}`);
-            document.getElementById("totaalProcent").textContent = 
-                ((totalPercentage === "0" || totalPercentage === "0.00%") 
-                ? "" 
-                : totalPercentage);
-        }
-        
-        alert(`Rapport "${reportObject.name}" geladen!`);
-    }
-
-
-    
-
-    function deleteRapport(username, index) {
-        let rapporten = JSON.parse(localStorage.getItem("rapporten")) || {};
-        if (rapporten[username]) {
-            rapporten[username].splice(index, 1);
-            localStorage.setItem("rapporten", JSON.stringify(rapporten));
-            alert("Rapport verwijderd!");
-            loadRapportList(username);
-        }
+    function clearInputs() {
+        document.querySelectorAll("#rapportTable input").forEach(input => input.value = "");
+        document.getElementById("totaalVerdiendMax").textContent = "";
+        document.getElementById("totaalProcent").textContent = "";
     }
 
     loginForm.addEventListener("submit", (e) => {
@@ -197,7 +124,6 @@ document.addEventListener("DOMContentLoaded", () => {
         loginUser(username, password);
     });
 
-    // Voeg ook registratie-functionaliteit toe aan de registreerknop
     document.getElementById("registerUser").addEventListener("click", (e) => {
         e.preventDefault();
         const username = usernameInput.value;
@@ -209,5 +135,119 @@ document.addEventListener("DOMContentLoaded", () => {
         saveUser(username, password);
     });
 
-    saveButton.addEventListener("click", saveRapport);
+    saveButton.addEventListener("click", () => saveRapport(false));
+
+    // In plaats van een aparte updateRapport-knop in de HTML voegen we de update-knop toe in de rapportlijst.
+
+    function loadRapportList(username) {
+        let rapporten = JSON.parse(localStorage.getItem("rapporten")) || {};
+        let userRapporten = rapporten[username] || [];
+        rapportList.innerHTML = "";
+
+        userRapporten.forEach((report, index) => {
+            let li = document.createElement("li");
+            li.style.marginBottom = "5px";
+
+            let reportInfo = document.createElement("span");
+            reportInfo.innerHTML = `${report.name} <strong>${report.totals.totalPercentage}</strong> (Opgeslagen: ${new Date(report.savedAt).toLocaleString()}) `;
+            li.appendChild(reportInfo);
+
+            let loadButton = document.createElement("button");
+            loadButton.textContent = "Laad";
+            loadButton.addEventListener("click", () => {
+                loadRapport(username, index);
+                loadedRapportIndex = index; // Markeer dit rapport als geladen
+                loadRapportList(username); // Herlaad de lijst zodat de update-knop verschijnt voor dit rapport
+            });
+            li.appendChild(loadButton);
+
+            let deleteButton = document.createElement("button");
+            deleteButton.textContent = "Verwijder";
+            deleteButton.style.marginLeft = "10px";
+            deleteButton.addEventListener("click", () => deleteRapport(username, index));
+            li.appendChild(deleteButton);
+
+            // Voeg update-knop toe als dit rapport momenteel geladen is
+            if (loadedRapportIndex === index) {
+                let updateButton = document.createElement("button");
+                updateButton.textContent = "Update";
+                updateButton.style.marginLeft = "10px";
+                updateButton.addEventListener("click", () => saveRapport(true));
+                li.appendChild(updateButton);
+            }
+
+            rapportList.appendChild(li);
+        });
+    }
+
+    function loadRapport(username, index) {
+        let rapporten = JSON.parse(localStorage.getItem("rapporten")) || {};
+        let reportObject = rapporten[username]?.[index];
+        if (!reportObject) return;
+        let rapportData = reportObject.data;
+
+        const rows = document.querySelectorAll("#rapportTable tr");
+        // Loop door de vakrijen (behalve de totaalrij)
+        rapportData.forEach((rowData, i) => {
+            if (i < rows.length - 1) {
+                let cells = rows[i].querySelectorAll("td");
+                const totaalVerdiend = rowData.totaalVerdiend;
+                const totaalTeVerdienen = rowData.totaalTeVerdienen;
+                cells[1].querySelector("input").value = (totaalVerdiend === "0" || totaalVerdiend == 0) ? "" : totaalVerdiend;
+                cells[2].querySelector("input").value = (totaalTeVerdienen === "0" || totaalTeVerdienen == 0) ? "" : totaalTeVerdienen;
+                updateRow(i);
+            }
+        });
+
+        if (reportObject.totals) {
+            const totalVerdiend = reportObject.totals.totalVerdiend;
+            const totalMaxPunten = reportObject.totals.totalMaxPunten;
+            const totalPercentage = reportObject.totals.totalPercentage;
+            document.getElementById("totaalVerdiendMax").textContent =
+                ((totalVerdiend === "0" || totalVerdiend == 0 || totalMaxPunten === "0" || totalMaxPunten == 0)
+                    ? ""
+                    : `${totalVerdiend} / ${totalMaxPunten}`);
+            document.getElementById("totaalProcent").textContent =
+                ((totalPercentage === "0" || totalPercentage === "0.00%")
+                    ? ""
+                    : totalPercentage);
+        }
+
+        alert(`Rapport "${reportObject.name}" geladen!`);
+    }
+
+    function deleteRapport(username, index) {
+        let rapporten = JSON.parse(localStorage.getItem("rapporten")) || {};
+        if (rapporten[username]) {
+            rapporten[username].splice(index, 1);
+            localStorage.setItem("rapporten", JSON.stringify(rapporten));
+            alert("Rapport verwijderd!");
+            loadRapportList(username);
+        }
+    }
+
+    // updateRow functie met controle op lege invoervelden
+    function updateRow(index) {
+        const verdiendInput = document.getElementById(`totaalVerdiend-${index}`).value;
+        const teVerdienenInput = document.getElementById(`totaalTeVerdienen-${index}`).value;
+
+        if (verdiendInput === "" || teVerdienenInput === "") {
+            document.getElementById(`procent-${index}`).textContent = "";
+            document.getElementById(`verdiend-${index}`).textContent = "";
+            return;
+        }
+
+        const totaalVerdiend = parseFloat(verdiendInput) || 0;
+        const totaalTeVerdienen = parseFloat(teVerdienenInput) || 0;
+        const maxPunten = vakken[index].maxPunten;
+
+        const procent = totaalTeVerdienen ? (totaalVerdiend / totaalTeVerdienen) * 100 : 0;
+        document.getElementById(`procent-${index}`).textContent = procent ? `${procent.toFixed(2)}%` : "";
+
+        const verdiend = totaalTeVerdienen ? (totaalVerdiend / totaalTeVerdienen) * maxPunten : 0;
+        document.getElementById(`verdiend-${index}`).textContent = verdiend ? `${verdiend.toFixed(2)} / ${maxPunten}` : "";
+    }
+
+    
+
 });

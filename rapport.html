@@ -7,18 +7,51 @@
   <link rel="stylesheet" href="nav.css">
   <style>
 
+   :root {
+  /* Light theme (jouw huidige stijl) */
+  --bg: #f4f4f9;
+  --container-bg: #ffffff;
+  --container-border: #bae6fd80;
+  --text: #2c3e50;
+  --th-bg: #dff6ffba;
+  --th-text: #2c3e50;
+  --td-bg: #fcfeff;
+  --input-border: #b7d1f9;
+  --button-bg: rgb(240 249 255 / 1);
+  --button-text: rgb(2 132 199 / 1);
+  --bg-chart: #4bc0c0;
+}
+
+/* Dark theme */
+[data-theme="dark"] {
+  --bg: #0f1720;
+  --container-bg: linear-gradient(180deg, #0b0b0d, #0f1113);
+  --container-border: #374151;
+  --text: #ffffff;
+  --th-bg: #1f2937;
+  --th-text: #ffffff;
+  --td-bg: #1b1c20;
+  --input-border: #374151;
+  --button-bg: #374151;
+  --button-text: #ffffff;
+  --bg-chart: #1d2f42;
+}
+
+
+
   body {
   font-family: Arial, sans-serif;
   margin: 0;
   padding: 20px;
-  background-color: #f4f4f9;
+  background: var(--bg); /* gradient of plain white afhankelijk van theme */
+  color: var(--text);
 }
 
 .container {
-  border: 2px solid #bae6fd80; /* Border around the container */
+  border: 2px solid var(--container-border);
+  background: var(--container-bg);
   border-radius: 10px; /* Rounded corners */
   padding: 20px; /* Padding inside the container */
-  background-color: white; /* Background color for the container */
   max-width: 800px; /* Maximum width for the container */
   margin: 10px auto;
   padding: 50px;
@@ -30,7 +63,7 @@
 
 h1 {
   text-align: center;
-  color: #2c3e50;
+  color: var(--text);
   font-weight: 1000;
   margin-bottom: 30px;
   font-size: 3rem;
@@ -42,7 +75,7 @@ table {
   border-collapse: separate; /* Change to 'separate' for border-radius to work */
   border-spacing: 0; /* Optional: Removes spacing between cells */
   margin-top: 20px;
-  border: 5px solid #bae5fd; /* Remove table border if needed */
+  border: 5px solid var(--container-border); /* Remove table border if needed */
   border-radius: 6px; /* Add border-radius */
   overflow: hidden; /* Ensures rounded corners are visible */
   background-color: #fff; /* Optional: Matches container background */
@@ -52,21 +85,23 @@ th, td {
   border: 2px solid #bae6fd80; /* Border around the container */
   padding: 8px;
   text-align: center;
-  color:  #2c3e50;
+  color: var(--th-text);
 }
 
 th {
-  background-color: #dff6ffba;
-  color: #2c3e50;
+  background-color: var(--th-bg);
+  color: var(--th-text);
 }
 
 input {
   width: 90%;
   padding: 5px;
   box-sizing: border-box;
-  border: 2px solid #b7d1f9;
   border-radius: 10px;
-  color:  #2c3e50;
+  border: 2px solid var(--input-border);
+  color: var(--text);
+  background: var(--container-bg);
+  
 }
 
 input:focus {
@@ -75,7 +110,8 @@ input:focus {
 }
 
 td {
-  background-color: #fcfeff;
+   background-color: var(--td-bg);
+  color: var(--text);
 }
 
 #loginForm {
@@ -88,7 +124,7 @@ td {
   border: 2px solid #bae6fd80; /* Border around the container */
   border-radius: 10px; /* Rounded corners */
   padding: 10px;
-  background-color: white; /* Background color for the container */
+  background: var(--container-bg);
   --tw-shadow: 0 25px 50px -12px rgb(0 0 0 / .25);
   --tw-shadow-colored: 0 25px 50px -12px var(--tw-shadow-color);
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
@@ -97,8 +133,8 @@ td {
 button, #loginUser, #registerUser {
   text-decoration: none;
   border: none;
-  background-color: rgb(240 249 255 / var(--tw-bg-opacity, 1));
-  color: rgb(2 132 199 / var(--tw-text-opacity, 1)); 
+  background-color: var(--button-bg);
+  color: var(--button-text);
   border-radius: 15px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   transition: background-color 0.3s ease, transform 0.2s ease;
@@ -114,8 +150,8 @@ button:hover {
 #saveRapport {
   text-decoration: none;
   border: none;
-  background-color: rgb(132, 238, 185);
-  color: black; 
+  background-color: rgb(132, 238, 185) !important;
+  color: black !important;
   font-weight: bold;
   border-radius: 9px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -130,7 +166,7 @@ button:hover {
 
 h2 {
   text-align: center;
-  color: #2c3e50;
+  color: var(--text);
   font-weight: 1000;
   margin: 0;
   font-size: 25px;
@@ -216,14 +252,17 @@ h2 {
 
 </head>
 <body>
+
   <nav>
     <div id="navigation">
+      
         Menu
         <div class="menu">
             <a href="home.html">Home</a>
             <a href="remweg.html">Remweg</a>
             <a href="rapport.html">Rapport</a>
             <a href="aitools.html">AI Tools</a>
+            <button id="themeToggle">🌓</button>
         </div>
     </div>
   </nav>
@@ -234,7 +273,7 @@ h2 {
     <button id="loginUser" type="submit">Login</button>
     <button id="registerUser" type="button">Registreer</button>
     <button id="saveRapport" type="button">Rapport opslaan</button>
-    <button id="logoutButton" type="button">Uitloggen</button>
+    <button id="logoutButton" type="button" style="display: none;">Uitloggen</button>
 
   </form>
   
@@ -269,20 +308,19 @@ h2 {
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
       const vakken = [
-      { naam: "Aardrijkskunde", maxPunten: 10 },
-      { naam: "Biologie", maxPunten: 10 },
-      { naam: "Chemie", maxPunten: 20 },
-      { naam: "Engels", maxPunten: 20 },
-      { naam: "Engineering", maxPunten: 40 },
-      { naam: "Frans", maxPunten: 20 },
-      { naam: "Fysica (Mechanica)", maxPunten: 20 },
-      { naam: "Fysica (Elektriciteit/Elektronica)", maxPunten: 20 },
-      { naam: "Geschiedenis", maxPunten: 10 },
-      { naam: "Godsdienst", maxPunten: 20 },
-      { naam: "FEV", maxPunten: 10 },
-      { naam: "Nederlands", maxPunten: 30 },
-      { naam: "Wiskunde", maxPunten: 70 },
-      { naam: "LO", maxPunten: 20 },
+      { naam: "AV Aardrijkskunde", maxPunten: 10 },
+      { naam: "AV Chemie", maxPunten: 20 },
+      { naam: "AV Engineering", maxPunten: 50 },
+      { naam: "AV Fysica (elektriciteit/elektronica)", maxPunten: 20 },
+      { naam: "AV Fysica (mechanica))", maxPunten: 20 },
+      { naam: "AV Nederlands", maxPunten: 30 },
+      { naam: "AV Wiskunde", maxPunten: 70 },
+      { naam: "AV Creatieve ontwikkeling", maxPunten: 10 },
+      { naam: "AV Engels", maxPunten: 20 },
+      { naam: "AV Frans", maxPunten: 20 },
+      { naam: "AV Geschiedenis", maxPunten: 10 },
+      { naam: "AV Godsdienst", maxPunten: 20 },
+      { naam: "AV Lichamelijke opvoeding", maxPunten: 20 },  
     ];
 
     const tableBody = document.getElementById("rapportTable");
@@ -340,20 +378,37 @@ h2 {
       });
     });
 
+  
+
     // Functie voor berekeningen per rij
     function updateRow(index) {
-      const totaalTeVerdienen = parseFloat(document.getElementById(`totaalTeVerdienen-${index}`).value) || 0;
-      const totaalVerdiend = parseFloat(document.getElementById(`totaalVerdiend-${index}`).value) || 0;
-      const maxPunten = vakken[index].maxPunten;
+    const totaalTeVerdienenInput = document.getElementById(`totaalTeVerdienen-${index}`);
+    const totaalVerdiendInput = document.getElementById(`totaalVerdiend-${index}`);
+    const procentCell = document.getElementById(`procent-${index}`);
+    const verdiendCell = document.getElementById(`verdiend-${index}`);
 
-      // Procent
-      const procent = totaalTeVerdienen ? (totaalVerdiend / totaalTeVerdienen) * 100 : 0;
-      document.getElementById(`procent-${index}`).textContent = `${procent.toFixed(2)}%`;
+    const totaalTeVerdienen = parseFloat(totaalTeVerdienenInput.value);
+    const totaalVerdiend = parseFloat(totaalVerdiendInput.value);
+    const maxPunten = vakken[index].maxPunten;
 
-      // Verdiend / Max Punten
-      const verdiend = totaalTeVerdienen ? (totaalVerdiend / totaalTeVerdienen) * maxPunten : 0;
-      document.getElementById(`verdiend-${index}`).textContent = `${verdiend.toFixed(2)} / ${maxPunten}`;
+    // Voorkom berekening als een van de velden leeg is
+    if (isNaN(totaalTeVerdienen) || isNaN(totaalVerdiend) || totaalTeVerdienen === 0) {
+        procentCell.textContent = "";
+        verdiendCell.textContent = "";
+        return; // Stop hier de functie
     }
+
+    const procent = (totaalVerdiend / totaalTeVerdienen) * 100;
+    procentCell.textContent = `${procent.toFixed(2)}%`;
+
+    const verdiend = (totaalVerdiend / totaalTeVerdienen) * maxPunten;
+    verdiendCell.textContent = `${verdiend.toFixed(2)} / ${maxPunten}`;
+
+    updateTotals();
+    updateChart();
+}
+
+
 
     // Voeg een extra rij toe voor de totaalcijfers
     const totalRow = document.createElement("tr");
@@ -368,42 +423,47 @@ h2 {
 
     // Functie voor berekening van de totaalcijfers
     function updateTotals() {
-      let totaalVerdiend = 0;
-      let totaalMaxPunten = 0;
+    let totaalVerdiend = 0;
+    let totaalMaxPunten = 0;
 
-      vakken.forEach((vak, index) => {
+    vakken.forEach((vak, index) => {
         const verdiendCell = document.getElementById(`verdiend-${index}`).textContent;
         if (verdiendCell) {
-          const [verdiend, maxPunten] = verdiendCell.split(" / ").map(Number);
-          totaalVerdiend += verdiend || 0;
-          totaalMaxPunten += maxPunten || 0;
+            const [verdiend, maxPunten] = verdiendCell.split(" / ").map(Number);
+            totaalVerdiend += verdiend || 0;
+            totaalMaxPunten += maxPunten || 0;
         }
-      });
+    });
 
-      // Update de celwaarden
-      document.getElementById("totaalVerdiendMax").textContent = `${totaalVerdiend.toFixed(2)} / ${totaalMaxPunten.toFixed(2)}`;
-      document.getElementById("totaalProcent").textContent = totaalMaxPunten
-        ? `${((totaalVerdiend / totaalMaxPunten) * 100).toFixed(2)}%`
-        : "0.00%";
-    }
+    const totaalProcent = totaalMaxPunten ? (totaalVerdiend / totaalMaxPunten) * 100 : 0;
+    document.getElementById("totaalProcent").textContent = `${totaalProcent.toFixed(2)}%`;
+    document.getElementById("totaalVerdiendMax").textContent = `${totaalVerdiend.toFixed(2)} / ${totaalMaxPunten}`;
+}
 
     // Data voor de grafiek
+    let chartkleur = "#4bc0c0";
     const chartLabels = vakken.map(vak => vak.naam);
     let chartData = vakken.map(() => 0); // Initialiseer alle percentages op 0
     let procentChart;
 
     // Functie om de grafiek bij te werken
     function updateChart() {
-      chartData = vakken.map((_, index) => {
-        const procentCell = document.getElementById(`procent-${index}`).textContent;
-        return parseFloat(procentCell.replace('%', '')) || 0; // Verwijder het '%' en zet om naar een getal
-      });
+    // Data updaten
+    chartData = vakken.map((_, index) => {
+      const procentCell = document.getElementById(`procent-${index}`).textContent;
+      return parseFloat(procentCell.replace('%', '')) || 0;
+    });
 
-      if (procentChart) {
-        procentChart.data.datasets[0].data = chartData;
-        procentChart.update();
-      }
-    }
+    // Dataset aanpassen
+    procentChart.data.datasets[0].data = chartData;
+    procentChart.data.datasets[0].backgroundColor = chartkleur;
+    procentChart.data.datasets[0].borderColor = chartkleur;
+
+    // Slechts 1 update call
+    procentChart.update();
+  }
+
+    
 
     // Initialiseer de grafiek
     function createChart() {
@@ -414,11 +474,11 @@ h2 {
           labels: chartLabels,
           datasets: [
             {
-              label: "Procent per vak",
+              label: "PROCENTEN PER VAK",
               data: chartData,
-              backgroundColor: "rgba(75, 192, 192, 0.2)",
-              borderColor: "rgba(75, 192, 192, 1)",
-              borderWidth: 1,
+              backgroundColor: chartkleur,
+              borderColor: chartkleur,
+              borderWidth: 0.5,
             },
           ],
         },
@@ -444,6 +504,7 @@ h2 {
 
     // Maak de grafiek bij het laden
     createChart();
+  
 
     // Update de grafiek elke keer dat de tabelwaarden veranderen
     function updateRow(index) {
@@ -463,8 +524,37 @@ h2 {
       updateChart();
     }
 
+    const themeToggle = document.getElementById("themeToggle");
+
+      themeToggle.addEventListener("click", () => {
+      const html = document.documentElement;
+      if (html.getAttribute("data-theme") === "dark") {
+        html.removeAttribute("data-theme"); 
+        localStorage.setItem("theme", "light");
+        chartkleur = "#4bc0c0";
+      } else {
+        html.setAttribute("data-theme", "dark");
+        localStorage.setItem("theme", "dark");
+        chartkleur = "#1d2f42";
+      }
+      updateChart(); // grafiek opnieuw tekenen met de nieuwe kleur
+    });
+
+
+      // Herstel voorkeur bij laden
+      if (localStorage.getItem("theme") === "dark") {
+        chartkleur = "#1d2f42";
+        updateChart();
+        document.documentElement.setAttribute("data-theme", "dark");
+      }
+
+    
+
     </script>
     <script src="nav.js"></script>
     <script src="saveRapport.js"></script>
+  </body>
+</html>
+
   </body>
 </html>
