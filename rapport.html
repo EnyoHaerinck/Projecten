@@ -120,7 +120,6 @@ td {
   position: fixed;
   left: 60px;
   top: 70px;
-
   border: 2px solid #bae6fd80; /* Border around the container */
   border-radius: 10px; /* Rounded corners */
   padding: 10px;
@@ -128,6 +127,22 @@ td {
   --tw-shadow: 0 25px 50px -12px rgb(0 0 0 / .25);
   --tw-shadow-colored: 0 25px 50px -12px var(--tw-shadow-color);
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
+
+#pasteModal {
+    display:none;
+    position:fixed;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    border: 2px solid #bae6fd80;
+    background: var(--container-bg);
+    --tw-shadow: 0 25px 50px -12px rgb(0 0 0 / .25);
+    --tw-shadow-colored: 0 25px 50px -12px var(--tw-shadow-color);
+    padding:20px; border-radius:10px;
+    width:400px;
+    z-index:1000;
+    box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 }
 
 button, #loginUser, #registerUser {
@@ -274,8 +289,15 @@ h2 {
     <button id="registerUser" type="button">Registreer</button>
     <button id="saveRapport" type="button">Rapport opslaan</button>
     <button id="logoutButton" type="button" style="display: none;">Uitloggen</button>
-
+    <button id="pastePointsBtn">📋Copy & Paste</button>
   </form>
+
+  <div id="pasteModal">
+        <textarea id="pasteInput" style="width:100%; margin: 0; height:150px; resize: none; border-radius: 9px; background: var(--container-bg); color: var(--text); border: 2px solid #bae6fd80"></textarea>
+        <br><br>
+        <button id="processPaste">Verwerken</button>
+        <button id="closePaste">Sluiten</button>
+    </div>
   
 
   <!-- Lijst met opgeslagen rapporten -->
@@ -521,6 +543,7 @@ h2 {
       document.getElementById(`verdiend-${index}`).textContent = `${verdiend.toFixed(2)} / ${maxPunten}`;
 
       // Update de grafiek
+      updateTotals();
       updateChart();
     }
 

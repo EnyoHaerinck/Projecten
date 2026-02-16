@@ -17,7 +17,6 @@ document.addEventListener("DOMContentLoaded", () => {
         passwordInput.value = "";
         alert("Je bent uitgelogd!");
         rapportList.innerHTML = "";
-        logoutButton.style.display = "none";
     });
 
     function saveUser(username, password) {
@@ -41,7 +40,6 @@ document.addEventListener("DOMContentLoaded", () => {
         localStorage.setItem("loggedInUser", username);
         alert("Login succesvol!");
         loadRapportList(username);
-        logoutButton.style.display = "inline-block";
     }
 
     // Functie om een rapport op te slaan. Als update true is, wordt het geladen rapport overschreven.
@@ -117,25 +115,6 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("totaalProcent").textContent = "";
     }
 
-    loginForm.addEventListener("submit", (e) => {
-        e.preventDefault();
-        const username = usernameInput.value;
-        const password = passwordInput.value;
-        loginUser(username, password);
-    });
-
-    document.getElementById("registerUser").addEventListener("click", (e) => {
-        e.preventDefault();
-        const username = usernameInput.value;
-        const password = passwordInput.value;
-        if (!username || !password) {
-            alert("Vul een gebruikersnaam en wachtwoord in!");
-            return;
-        }
-        saveUser(username, password);
-    });
-
-    saveButton.addEventListener("click", () => saveRapport(false));
 
     // In plaats van een aparte updateRapport-knop in de HTML voegen we de update-knop toe in de rapportlijst.
 
@@ -214,6 +193,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         alert(`Rapport "${reportObject.name}" geladen!`);
+        updateChart();
     }
 
     function deleteRapport(username, index) {
@@ -248,6 +228,90 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById(`verdiend-${index}`).textContent = verdiend ? `${verdiend.toFixed(2)} / ${maxPunten}` : "";
     }
 
-    
+    loginForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const username = usernameInput.value;
+        const password = passwordInput.value;
+        loginUser(username, password);
+    });
+
+    document.getElementById("registerUser").addEventListener("click", (e) => {
+        e.preventDefault();
+        const username = usernameInput.value;
+        const password = passwordInput.value;
+        if (!username || !password) {
+            alert("Vul een gebruikersnaam en wachtwoord in!");
+            return;
+        }
+        saveUser(username, password);
+    });
+
+    saveButton.addEventListener("click", () => saveRapport(false));
+
+    const pasteBtn = document.getElementById("pastePointsBtn");
+const pasteModal = document.getElementById("pasteModal");
+const closePaste = document.getElementById("closePaste");
+const processPaste = document.getElementById("processPaste");
+const pasteInput = document.getElementById("pasteInput");
+
+pasteBtn.addEventListener("click", () => {
+  pasteModal.style.display = "block";
+});
+
+closePaste.addEventListener("click", () => {
+  pasteModal.style.display = "none";
+});
+
+processPaste.addEventListener("click", () => {
+  const text = pasteInput.value;
+  const lines = text.split("\n");
+
+  lines.forEach(line => {
+    if (!line.trim()) return;
+
+    const parts = line.split("\t");
+    const vakNaam = parts[0].trim();
+
+    // Zoek juiste vak index
+    const index = vakken.findIndex(v => 
+      v.naam.toLowerCase().includes(vakNaam.toLowerCase())
+    );
+
+    if (index === -1) return;
+
+    let totaalVerdiend = 0;
+    let totaalTeVerdienen = 0;
+
+    // Loop over alle kolommen behalve eerste
+    for (let i = 1; i < parts.length; i++) {
+      const punt = parts[i].replace(",", ".").trim();
+
+      if (punt.includes("/")) {
+        const [verdiend, max] = punt.split("/").map(Number);
+
+        if (!isNaN(verdiend) && !isNaN(max)) {
+          totaalVerdiend += verdiend;
+          totaalTeVerdienen += max;
+        }
+      }
+    }
+
+    // Zet in inputvelden
+    document.getElementById(`totaalVerdiend-${index}`).value =
+        totaalVerdiend ? totaalVerdiend.toFixed(2) : "";
+
+        document.getElementById(`totaalTeVerdienen-${index}`).value =
+        totaalTeVerdienen ? totaalTeVerdienen.toFixed(2) : "";
+
+        // Update berekening
+        updateRow(index);
+        
+    });
+
+    pasteModal.style.display = "none";
+    pasteInput.value = "";
+    updateTotals();
+    updateChart();
+    });
 
 });
