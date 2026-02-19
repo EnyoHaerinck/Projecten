@@ -291,6 +291,7 @@ h2 {
     <button id="logoutButton" type="button" style="display: none;">Uitloggen</button>
     <button id="pastePointsBtn" type="button">📋Copy & Paste</button>
   </form>
+  
 
   <div id="pasteModal">
         <textarea id="pasteInput" style="width:100%; margin: 0; height:150px; resize: none; border-radius: 9px; background: var(--container-bg); color: var(--text); border: 2px solid #bae6fd80"></textarea>
@@ -403,32 +404,7 @@ h2 {
   
 
     // Functie voor berekeningen per rij
-    function updateRow(index) {
-    const totaalTeVerdienenInput = document.getElementById(`totaalTeVerdienen-${index}`);
-    const totaalVerdiendInput = document.getElementById(`totaalVerdiend-${index}`);
-    const procentCell = document.getElementById(`procent-${index}`);
-    const verdiendCell = document.getElementById(`verdiend-${index}`);
-
-    const totaalTeVerdienen = parseFloat(totaalTeVerdienenInput.value);
-    const totaalVerdiend = parseFloat(totaalVerdiendInput.value);
-    const maxPunten = vakken[index].maxPunten;
-
-    // Voorkom berekening als een van de velden leeg is
-    if (isNaN(totaalTeVerdienen) || isNaN(totaalVerdiend) || totaalTeVerdienen === 0) {
-        procentCell.textContent = "";
-        verdiendCell.textContent = "";
-        return; // Stop hier de functie
-    }
-
-    const procent = (totaalVerdiend / totaalTeVerdienen) * 100;
-    procentCell.textContent = `${procent.toFixed(2)}%`;
-
-    const verdiend = (totaalVerdiend / totaalTeVerdienen) * maxPunten;
-    verdiendCell.textContent = `${verdiend.toFixed(2)} / ${maxPunten}`;
-
-    updateTotals();
-    updateChart();
-}
+    
 
 
 
@@ -530,22 +506,33 @@ h2 {
 
     // Update de grafiek elke keer dat de tabelwaarden veranderen
     function updateRow(index) {
-      const totaalTeVerdienen = parseFloat(document.getElementById(`totaalTeVerdienen-${index}`).value) || 0;
-      const totaalVerdiend = parseFloat(document.getElementById(`totaalVerdiend-${index}`).value) || 0;
-      const maxPunten = vakken[index].maxPunten;
+    const totaalTeVerdienenInput = document.getElementById(`totaalTeVerdienen-${index}`);
+    const totaalVerdiendInput = document.getElementById(`totaalVerdiend-${index}`);
+    const procentCell = document.getElementById(`procent-${index}`);
+    const verdiendCell = document.getElementById(`verdiend-${index}`);
 
-      // Procent
-      const procent = totaalTeVerdienen ? (totaalVerdiend / totaalTeVerdienen) * 100 : 0;
-      document.getElementById(`procent-${index}`).textContent = `${procent.toFixed(2)}%`;
+    const totaalTeVerdienen = parseFloat(totaalTeVerdienenInput.value);
+    const totaalVerdiend = parseFloat(totaalVerdiendInput.value);
+    const maxPunten = vakken[index].maxPunten;
 
-      // Verdiend / Max Punten
-      const verdiend = totaalTeVerdienen ? (totaalVerdiend / totaalTeVerdienen) * maxPunten : 0;
-      document.getElementById(`verdiend-${index}`).textContent = `${verdiend.toFixed(2)} / ${maxPunten}`;
-
-      // Update de grafiek
-      updateTotals();
-      updateChart();
+    // Alleen berekenen als er een waarde staat en totaalTeVerdienen > 0
+    if (!totaalTeVerdienenInput.value || !totaalVerdiendInput.value || totaalTeVerdienen === 0) {
+        procentCell.textContent = ""; // leeg laten
+        verdiendCell.textContent = ""; // leeg laten
+        updateTotals(); // update de totalen
+        updateChart();  // update de grafiek
+        return;
     }
+
+    const procent = (totaalVerdiend / totaalTeVerdienen) * 100;
+    procentCell.textContent = `${procent.toFixed(2)}%`;
+
+    const verdiend = (totaalVerdiend / totaalTeVerdienen) * maxPunten;
+    verdiendCell.textContent = `${verdiend.toFixed(2)} / ${maxPunten}`;
+
+    updateTotals();
+    updateChart();
+  }
 
     const themeToggle = document.getElementById("themeToggle");
 
@@ -574,10 +561,8 @@ h2 {
     
 
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="nav.js"></script>
-    <script src="saveRapport.js"></script>
-  </body>
-</html>
-
+    <script type="module" src="saveRapport.js"></script>
   </body>
 </html>
